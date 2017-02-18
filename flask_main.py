@@ -1,7 +1,7 @@
 from flask import Flask
 import requests as r
 import json
-from difflib import SequenceMatcher
+import distance
 
 app = Flask(__name__)
 api_key = 'DEMO_KEY'
@@ -11,12 +11,12 @@ api_key = 'DEMO_KEY'
 def get_food_details(param_food_name):
     food_collection = get_product_list(param_food_name)
     optimum_result = None
-    best_ratio = 0
+    best_ratio = 1000
     for t in food_collection:
         food_id, food_name = t
-        ratio = distance(param_food_name, food_name)
+        ratio = get_ratio(param_food_name, food_name)
         print(food_id, ratio)
-        if ratio > best_ratio:
+        if ratio < best_ratio:
             best_ratio = ratio
             optimum_result = food_id
 
@@ -32,7 +32,6 @@ def get_product_list(q=''):
     result = []
     if 'list' in data:
         result = list([(x['ndbno'], x['name']) for x in data['list']['item']])
-    print(result)
     return result
 
 
@@ -41,7 +40,6 @@ def get_product_detail(product_id):
     url_root = 'https://api.nal.usda.gov/ndb/reports/?ndbno={product_id}&format={format}&type={type}&api_key={api_key}'
     params = { 'format': 'json', 'type': 'f', 'api_key': api_key, 'product_id': product_id }
     result = 'None'
-    print(product_id)
     if product_id is not None:
         resp = r.get(url_root.format_map(params))
         data = json.loads(resp._content)
@@ -67,8 +65,8 @@ def get_product_detail(product_id):
     return result
 
 
-def distance(a, b):
-    return SequenceMatcher(None, a, b).ratio()
+def get_ratio(a, b):
+    return distance.levenshtein(a, b)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

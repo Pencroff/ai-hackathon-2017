@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import jsonify
 import requests as r
 import json
 import distance
@@ -15,11 +16,9 @@ def get_food_details(param_food_name):
     for t in food_collection:
         food_id, food_name = t
         ratio = get_ratio(param_food_name, food_name)
-        print(food_id, ratio)
         if ratio < best_ratio:
             best_ratio = ratio
             optimum_result = food_id
-
     return get_product_detail(optimum_result)
 
 
@@ -43,6 +42,7 @@ def get_product_detail(product_id):
     if product_id is not None:
         resp = r.get(url_root.format_map(params))
         data = json.loads(resp._content)
+        import pdb; pdb.set_trace()
         result = {}
         if 'report' in data:
             item = data['report']['food']
@@ -62,7 +62,8 @@ def get_product_detail(product_id):
                    result['fiber'] = (float(n_item['value']), n_item['unit'])
                 if n_item['nutrient_id'] == '269':
                    result['sugar'] = (float(n_item['value']), n_item['unit'])
-    return result
+
+    return jsonify(result)
 
 
 def get_ratio(a, b):

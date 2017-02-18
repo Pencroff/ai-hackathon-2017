@@ -34,6 +34,32 @@ def get_product_list(q=''):
     result = list([(x['ndbno'], x['name']) for x in data['list']['item']])
     return result
 
+def get_product_detail(product_id):
+#   https://api.nal.usda.gov/ndb/reports/?ndbno=01009&type=f&format=json&api_key=DEMO_KEY
+    url_root = 'https://api.nal.usda.gov/ndb/reports/?ndbno={product_id}&format={format}&type={type}&api_key={api_key}'
+    params = { 'format': 'json', 'type': 'f', 'api_key': api_key, 'product_id': product_id }
+    resp = r.get(url_root.format_map(params))
+    data = json.loads(resp._content)
+    item = data['report']['food']
+    result = {}
+    result['id'] = item['ndbno']
+    result['name'] = item['name']
+    nutrients = item['nutrients']
+    for n_item in nutrients:
+        if n_item['nutrient_id'] == '208':
+           result['energy'] = (int(n_item['value']), n_item['unit'])
+        if n_item['nutrient_id'] == '203':
+           result['protein'] = (float(n_item['value']), n_item['unit'])
+        if n_item['nutrient_id'] == '204':
+           result['fat'] = (float(n_item['value']), n_item['unit'])
+        if n_item['nutrient_id'] == '205':
+           result['carbohydrate'] = (float(n_item['value']), n_item['unit'])
+        if n_item['nutrient_id'] == '291':
+           result['fiber'] = (float(n_item['value']), n_item['unit'])
+        if n_item['nutrient_id'] == '269':
+           result['sugar'] = (float(n_item['value']), n_item['unit'])
+    return result
+
 
 def distance(a, b):
     return SequenceMatcher(None, a, b).ratio()

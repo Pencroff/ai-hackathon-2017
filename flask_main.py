@@ -10,8 +10,7 @@ api_key = 'DEMO_KEY'
 @app.route("/compare/<param_food_name>", methods=['GET'])
 def get_food_details(param_food_name):
     food_collection = get_product_list(param_food_name)
-    import pdb; pdb.set_trace()
-    optimum_result = 0
+    optimum_result = None
     best_ratio = 0
     for t in food_collection:
         food_id, food_name = t

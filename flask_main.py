@@ -8,7 +8,7 @@ app = Flask(__name__)
 api_key = 'DEMO_KEY'
 
 
-@app.route("/compare/<param_food_name>", methods=['GET'])
+@app.route("/<param_food_name>", methods=['GET'])
 def get_food_details(param_food_name):
     food_collection = get_product_list(param_food_name)
     optimum_result = None

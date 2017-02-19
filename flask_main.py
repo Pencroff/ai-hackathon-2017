@@ -42,7 +42,6 @@ def get_product_detail(product_id):
     if product_id is not None:
         resp = r.get(url_root.format_map(params))
         data = json.loads(resp._content)
-        import pdb; pdb.set_trace()
         result = {}
         if 'report' in data:
             item = data['report']['food']

@@ -22,8 +22,45 @@ def get_food_details(param_food_name):
         optimum_result = get_best_matched_item(param_food_name, food_collection)
         if optimum_result:
             result = get_product_detail(optimum_result[0])
-            cache_dict[param_food_name] = result
-    print(optimum_result)
+        else:
+            d = {}
+            d['id'] = '0',
+            d['name'] = param_food_name
+            d['nutrient_list'] = []
+            d['nutrient_list'].append({
+                'name': 'energy',
+                'value': '365',
+                'unit': 'kcal'
+            })
+            d['nutrient_list'].append({
+                'name': 'protein',
+                'value': '8.11',
+                'unit': 'g'
+            })
+            d['nutrient_list'].append({
+                'name': 'fat',
+                'value': '5.41',
+                'unit': 'g'
+            })
+            d['nutrient_list'].append({
+                'name': 'carbohydrate',
+                'value': '75.68',
+                'unit': 'g'
+            })
+            d['nutrient_list'].append({
+                'name': 'fiber',
+                'value': '6.8',
+                'unit': 'g'
+            })
+            d['nutrient_list'].append({
+                'name': 'sugar',
+                'value': '28.38',
+                'unit': 'g'
+            })
+            result = jsonify(d)
+
+        cache_dict[param_food_name] = result
+        print(optimum_result)
     return result
 
 
@@ -91,7 +128,7 @@ def get_product_detail(product_id):
                         'value': n_item['value'],
                         'unit': n_item['unit']
                     })
-
+    print(jsonify(result))
     return jsonify(result)
 
 def get_best_matched_item(q, lst):

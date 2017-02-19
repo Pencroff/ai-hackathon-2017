@@ -14,13 +14,6 @@ api_key = 'DEMO_KEY'
 def get_food_details(param_food_name):
     food_collection = get_product_list(param_food_name)
     optimum_result = get_best_matched_item(param_food_name, food_collection)
-    # best_ratio = 1000
-    # for t in food_collection:
-    #     food_id, food_name = t
-    #     ratio = get_ratio(param_food_name, food_name)
-    #     if ratio < best_ratio:
-    #         best_ratio = ratio
-    #         optimum_result = food_id
     print(optimum_result)
     return get_product_detail(optimum_result[0])
 
@@ -46,7 +39,6 @@ def get_product_detail(product_id):
         resp = r.get(url_root.format_map(params))
         data = json.loads(resp._content)
         result = {}
-        print(data['report'])
         if 'report' in data:
             item = data['report']['food']
             result['id'] = item['ndbno']
@@ -54,7 +46,6 @@ def get_product_detail(product_id):
             result['nutrient_list'] = []
             nutrients = item['nutrients']
             for n_item in nutrients:
-                print(n_item)
                 if n_item['nutrient_id'] == '208' or n_item['nutrient_id'] == 208:
                     result['nutrient_list'].append({
                         'name': 'energy',
@@ -103,9 +94,6 @@ def get_best_matched_item(q, lst):
         lst[idx] = (lst[idx][0], lst[idx][1], jaccard(item.toarray(), req_X))
     best_item = min(lst, key=lambda x: x[2])
     return best_item
-
-def get_ratio(a, b):
-    return 1 #distance.levenshtein(a, b)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -9,14 +9,20 @@ from scipy.spatial.distance import jaccard
 app = Flask(__name__)
 api_key = 'DEMO_KEY'
 
+cache_dict = {}
+
 
 @app.route("/compare/<param_food_name>", methods=['GET'])
 def get_food_details(param_food_name):
     result = 'Not found'
-    food_collection = get_product_list(param_food_name)
-    optimum_result = get_best_matched_item(param_food_name, food_collection)
-    if optimum_result:
-        result = get_product_detail(optimum_result[0])
+    if (param_food_name in cache_dict):
+        result = cache_dict[param_food_name]
+    else:
+        food_collection = get_product_list(param_food_name)
+        optimum_result = get_best_matched_item(param_food_name, food_collection)
+        if optimum_result:
+            result = get_product_detail(optimum_result[0])
+            cache_dict[param_food_name] = result
     print(optimum_result)
     return result
 

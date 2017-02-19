@@ -1,0 +1,10 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '9.0'
+
+target 'FoodAI' do
+    use_frameworks!
+    pod 'Cloudinary', '~> 2.0'
+    pod 'SwiftSpinner'
+    pod 'Gloss', '~> 1.2'
+    pod 'Alamofire-Gloss'
+end

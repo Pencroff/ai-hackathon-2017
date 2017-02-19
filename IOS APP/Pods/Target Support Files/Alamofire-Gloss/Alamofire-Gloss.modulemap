@@ -1,0 +1,6 @@
+framework module Alamofire_Gloss {
+  umbrella header "Alamofire-Gloss-umbrella.h"
+
+  export *
+  module * { export * }
+}

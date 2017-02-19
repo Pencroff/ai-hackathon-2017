@@ -12,10 +12,13 @@ api_key = 'DEMO_KEY'
 
 @app.route("/compare/<param_food_name>", methods=['GET'])
 def get_food_details(param_food_name):
+    result = 'Not found'
     food_collection = get_product_list(param_food_name)
     optimum_result = get_best_matched_item(param_food_name, food_collection)
+    if optimum_result:
+        result = get_product_detail(optimum_result[0])
     print(optimum_result)
-    return get_product_detail(optimum_result[0])
+    return result
 
 
 def get_product_list(q=''):
@@ -86,13 +89,15 @@ def get_product_detail(product_id):
     return jsonify(result)
 
 def get_best_matched_item(q, lst):
-    txt_data = [x[1] for x in lst]
-    vectorizer = CountVectorizer(min_df=1)
-    X = vectorizer.fit_transform(txt_data)
-    req_X = vectorizer.transform([q]).toarray()
-    for idx, item in enumerate(X):
-        lst[idx] = (lst[idx][0], lst[idx][1], jaccard(item.toarray(), req_X))
-    best_item = min(lst, key=lambda x: x[2])
+    best_item = None
+    if len(lst) > 0:
+        txt_data = [x[1] for x in lst]
+        vectorizer = CountVectorizer(min_df=1)
+        X = vectorizer.fit_transform(txt_data)
+        req_X = vectorizer.transform([q]).toarray()
+        for idx, item in enumerate(X):
+            lst[idx] = (lst[idx][0], lst[idx][1], jaccard(item.toarray(), req_X))
+        best_item = min(lst, key=lambda x: x[2])
     return best_item
 
 if __name__ == "__main__":

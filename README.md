@@ -2,6 +2,9 @@
 
 Mobile app for measuring product ingredients by image
 
+## Video demo
+[![demo](http://i3.ytimg.com/vi/Dg91CLXhTYk/hqdefault.jpg)](http://www.youtube.com/watch?v=Dg91CLXhTYk)
+
 ## Contributors
 
 + [Pablo Palomar](https://github.com/ppalomar)
